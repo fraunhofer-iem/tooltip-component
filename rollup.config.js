@@ -1,7 +1,6 @@
 import typescript from "@rollup/plugin-typescript";
 import babel from "@rollup/plugin-babel";
 import resolve from "@rollup/plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
 
 export default {
@@ -18,8 +17,7 @@ export default {
   plugins: [
     resolve(),
     typescript(),
-    babel({ babelHelpers: "bundled" }),
-    terser(),
+    babel({ presets: ['@babel/preset-react'], babelHelpers: "bundled" }),
   ],
   external: ["react", "react-dom"],
 };

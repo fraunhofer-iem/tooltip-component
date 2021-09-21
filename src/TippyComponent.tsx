@@ -1,6 +1,6 @@
 import popper from "@popperjs/core"
 import Tippy, { TippyProps } from "@tippyjs/react"
-import React, { useState } from "react"
+import * as React from 'react';
 import { TippyControl } from "./TooltipComponent"
 interface Props {
     node: string
@@ -8,10 +8,10 @@ interface Props {
 }
 
 export default function TippyComponent(props: Props) {
-    const [content, setContent] = useState<React.ReactNode>()
-    const [popperRef, setPopperRef] = useState<popper.VirtualElement>()
-    const [dispose, setDispose] = useState<() => void>(() => () => {})
-    const [tippyProps, setTippyProps] = useState<
+    const [content, setContent] = React.useState<React.ReactNode>()
+    const [popperRef, setPopperRef] = React.useState<popper.VirtualElement>()
+    const [dispose, setDispose] = React.useState<() => void>(() => () => {})
+    const [tippyProps, setTippyProps] = React.useState<
         Omit<
             TippyProps,
             | "content"

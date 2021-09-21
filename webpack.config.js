@@ -7,8 +7,13 @@ const config = {
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js'
+    filename: 'index.js',
+    clean: true,
+    libraryTarget: 'window',
   },
+  // optimization: {
+  //   usedExports: false,
+  // },
   target: 'web',
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],

@@ -1,4 +1,4 @@
-import * as popper from "@popperjs/core";
+import popper from "@popperjs/core";
 import { TippyProps } from "@tippyjs/react";
 import * as React from "react";
 import TippyComponent from "./TippyComponent";
@@ -35,7 +35,7 @@ export type TippyControl = {
   ) => void;
 };
 
-const TooltipComponent = (props: Props) => {
+export default (props: Props) => {
   // each target is assigned a TippyComponent
   const [targets, setTargets] = React.useState<string[]>(
     props.targets ? props.targets : []
@@ -43,9 +43,12 @@ const TooltipComponent = (props: Props) => {
   const tippies = React.useRef<{ [key: string]: TippyControl }>({});
 
   // store state changing methods of generated TippyComponents
-  const registerTippy = React.useCallback((node: string, control: TippyControl) => {
-    tippies.current[node] = control;
-  }, []);
+  const registerTippy = React.useCallback(
+    (node: string, control: TippyControl) => {
+      tippies.current[node] = control;
+    },
+    []
+  );
 
   // return state changing methods of generated TippyComponents
   const controlTippy = React.useCallback((node: string) => {
@@ -63,12 +66,10 @@ const TooltipComponent = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       {targets.map((node) => (
         <TippyComponent node={node} key={node} register={registerTippy} />
       ))}
-    </React.Fragment>
+    </>
   );
 };
-
-export default TooltipComponent;

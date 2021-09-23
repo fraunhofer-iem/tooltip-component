@@ -3,7 +3,7 @@ import babel from "@rollup/plugin-babel";
 import external from "rollup-plugin-peer-deps-external";
 import resolve from "@rollup/plugin-node-resolve";
 import { DEFAULT_EXTENSIONS } from "@babel/core";
-import pkg from "./package.json";
+import { terser } from "rollup-plugin-terser";
 
 export default {
   input: "src/index.ts",
@@ -33,6 +33,7 @@ export default {
       exclude: "node_modules/**",
       extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
     }),
+    terser(),
   ],
-  external: ["react", "react-dom", "@tippyjs/react"],
+  external: ["react", "react-dom"],
 };

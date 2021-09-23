@@ -1,7 +1,8 @@
-import * as popper from "@popperjs/core";
+import popper from "@popperjs/core";
 import Tippy, { TippyProps } from "@tippyjs/react";
 import * as React from "react";
 import { TippyControl } from "./TooltipComponent";
+
 interface Props {
   node: string;
   register: (node: string, control: TippyControl) => void;

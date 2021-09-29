@@ -18,9 +18,54 @@ interface Props {
   controls?: (getTippy: (target: string) => TippyControl) => void;
 }
 
+export const useTippy = () => {
+  const tooltipRegistry = React.useRef<(target: string) => TippyControl>();
+  const setTooltipRegistry = React.useCallback(
+    (tippy: (target: string) => TippyControl) => {
+      tooltipRegistry.current = tippy;
+    },
+    []
+  );
+  const tippy = (
+    target: string,
+    props: {
+      content?: React.ReactNode;
+      popperRef?: popper.VirtualElement;
+      dispose?: () => void;
+      tippyProps?: Omit<
+        TippyProps,
+        | 'content'
+        | 'visible'
+        | 'getReferenceClientRect'
+        | 'interactive'
+        | 'reference'
+        | 'onDestroy'
+      >;
+    }
+  ) => {
+    if (tooltipRegistry.current) {
+      const controls = tooltipRegistry.current(target);
+      if (props.hasOwnProperty('content')) {
+        controls.setContent(props.content);
+      }
+      if (props.hasOwnProperty('popperRef')) {
+        controls.setReference(props.popperRef);
+      }
+      if (props.hasOwnProperty('dispose')) {
+        controls.setDispose(() => props.dispose);
+      }
+      if (props.hasOwnProperty('tippyProps')) {
+        controls.additionalProps(props.tippyProps ?? {});
+      }
+    }
+  };
+
+  return { tooltipRegistry, setTooltipRegistry, tippy };
+};
+
 export type TippyControl = {
-  setContent: (content: React.ReactNode) => void;
-  setReference: (popperRef: popper.VirtualElement) => void;
+  setContent: (content: React.ReactNode | undefined) => void;
+  setReference: (popperRef: popper.VirtualElement | undefined) => void;
   setDispose: (dispose: () => void) => void;
   additionalProps: (
     props: Omit<

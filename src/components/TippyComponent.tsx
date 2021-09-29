@@ -1,7 +1,7 @@
-import popper from "@popperjs/core";
-import Tippy, { TippyProps } from "@tippyjs/react";
-import * as React from "react";
-import { TippyControl } from "./TooltipComponent";
+import popper from '@popperjs/core';
+import Tippy, { TippyProps } from '@tippyjs/react';
+import * as React from 'react';
+import { TippyControl } from './TooltipComponent';
 
 interface Props {
   node: string;
@@ -15,12 +15,12 @@ export default function TippyComponent(props: Props) {
   const [tippyProps, setTippyProps] = React.useState<
     Omit<
       TippyProps,
-      | "content"
-      | "visible"
-      | "getReferenceClientRect"
-      | "interactive"
-      | "reference"
-      | "onDestroy"
+      | 'content'
+      | 'visible'
+      | 'getReferenceClientRect'
+      | 'interactive'
+      | 'reference'
+      | 'onDestroy'
     >
   >({});
 

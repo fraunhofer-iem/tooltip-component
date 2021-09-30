@@ -1,90 +1,89 @@
 import popper from '@popperjs/core';
-import { TippyProps } from '@tippyjs/react';
 import * as React from 'react';
-import TippyComponent from './TippyComponent';
+import TippyComponent, { TippyComponentProps } from './TippyComponent';
 
-interface Props {
-  /**
-   * Provide Tippy target IDs as array, if known at mount time
-   */
-  targets?: string[];
-  /**
-   * Set Tippy target IDs (i.e. if not known at mount time) using callback method
-   */
-  setTargets?: (setTargets: (targets: string[]) => void) => void;
-  /**
-   * Get state control methods of TippyComponent assigned to target using a callback method
-   */
-  controls?: (getTippy: (target: string) => TippyControl) => void;
-}
-
-export const useTippy = () => {
-  const tooltipRegistry = React.useRef<(target: string) => TippyControl>();
-  const setTooltipRegistry = React.useCallback(
-    (tippy: (target: string) => TippyControl) => {
-      tooltipRegistry.current = tippy;
-    },
-    []
-  );
-  const tippy = (
+/**
+ * Tippyfied components obtain a new prop ´setTippy` which allows to set
+ * an interactive Tippy tooltip for an arbitrary target.
+ */
+export interface TooltipControl {
+  setTippy: (
     target: string,
     props: {
       content?: React.ReactNode;
       popperRef?: popper.VirtualElement;
       dispose?: () => void;
-      tippyProps?: Omit<
-        TippyProps,
-        | 'content'
-        | 'visible'
-        | 'getReferenceClientRect'
-        | 'interactive'
-        | 'reference'
-        | 'onDestroy'
-      >;
+      tippyProps?: TippyComponentProps;
     }
-  ) => {
-    if (tooltipRegistry.current) {
-      const controls = tooltipRegistry.current(target);
-      if (props.hasOwnProperty('content')) {
-        controls.setContent(props.content);
-      }
-      if (props.hasOwnProperty('popperRef')) {
-        controls.setReference(props.popperRef);
-      }
-      if (props.hasOwnProperty('dispose')) {
-        controls.setDispose(() => props.dispose);
-      }
-      if (props.hasOwnProperty('tippyProps')) {
-        controls.additionalProps(props.tippyProps ?? {});
-      }
-    }
-  };
+  ) => void;
+}
+/**
+ * Add necessary hooks to the component passed as parameter
+ * in order to allow control of Tippy tooltips within the wrapped component.
+ * Also add TooltipComponent to the virtual DOM.
+ */
+export function tippyfy(component: (props: TooltipControl) => React.ReactNode) {
+  return (props: { [key: string]: any }) => {
+    const tooltipRegistry = React.useRef<(target: string) => TippyControl>();
 
-  return { tooltipRegistry, setTooltipRegistry, tippy };
-};
+    const setTooltipRegistry = React.useCallback(
+      (tippy: (target: string) => TippyControl) => {
+        tooltipRegistry.current = tippy;
+      },
+      []
+    );
+
+    const setTippy = (
+      target: string,
+      props: {
+        content?: React.ReactNode;
+        popperRef?: popper.VirtualElement;
+        dispose?: () => void;
+        tippyProps?: TippyComponentProps;
+      }
+    ) => {
+      if (tooltipRegistry.current) {
+        const controls = tooltipRegistry.current(target);
+        if (props.hasOwnProperty('content')) {
+          controls.setContent(props.content);
+        }
+        if (props.hasOwnProperty('popperRef')) {
+          controls.setReference(props.popperRef);
+        }
+        if (props.hasOwnProperty('dispose')) {
+          controls.setDispose(() => props.dispose);
+        }
+        if (props.hasOwnProperty('tippyProps')) {
+          controls.additionalProps(props.tippyProps ?? {});
+        }
+      }
+    };
+    return (
+      <>
+        <TooltipComponent controls={setTooltipRegistry} />
+        {component({
+          setTippy: setTippy,
+          ...props,
+        })}
+      </>
+    );
+  };
+}
 
 export type TippyControl = {
-  setContent: (content: React.ReactNode | undefined) => void;
+  setContent: (content: React.ReactNode) => void;
   setReference: (popperRef: popper.VirtualElement | undefined) => void;
   setDispose: (dispose: () => void) => void;
-  additionalProps: (
-    props: Omit<
-      TippyProps,
-      | 'content'
-      | 'visible'
-      | 'getReferenceClientRect'
-      | 'interactive'
-      | 'reference'
-      | 'onDestroy'
-    >
-  ) => void;
+  additionalProps: (props: TippyComponentProps) => void;
 };
 
-export default (props: Props) => {
+interface Props {
+  controls: (getTippy: (target: string) => TippyControl) => void;
+}
+
+function TooltipComponent(props: Props) {
   // each target is assigned a TippyComponent
-  const [targets, setTargets] = React.useState<string[]>(
-    props.targets ? props.targets : []
-  );
+  const [targets, setTargets] = React.useState<string[]>([]);
   const tippies = React.useRef<{ [key: string]: TippyControl }>({});
 
   // store state changing methods of generated TippyComponents
@@ -96,14 +95,15 @@ export default (props: Props) => {
   );
 
   // return state changing methods of generated TippyComponents
-  const controlTippy = React.useCallback((node: string) => {
-    return tippies.current[node];
-  }, []);
-
-  // provide parent component with callback to set target IDs
-  if (props.setTargets) {
-    props.setTargets(setTargets);
-  }
+  const controlTippy = React.useCallback(
+    (target: string) => {
+      if (!targets.includes(target)) {
+        setTargets([target, ...targets]);
+      }
+      return tippies.current[target];
+    },
+    [targets]
+  );
 
   // provide parent component with callback to get state methods of generated TippyComponents
   if (props.controls) {
@@ -117,4 +117,4 @@ export default (props: Props) => {
       ))}
     </>
   );
-};
+}

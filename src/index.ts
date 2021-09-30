@@ -1,3 +1,3 @@
-import TooltipComponent from './components/TooltipComponent';
+import { tippyfy } from './components/TooltipComponent';
 export type { TippyControl } from './components/TooltipComponent';
-export default TooltipComponent;
+export default tippyfy;

@@ -1,65 +1,56 @@
 {
+  "name": "example",
   "version": "0.1.0",
-  "description": "React component that organizes tooltips for non-React targets using Popper VirtualElements and the official Tippy.js for React component.",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "scripts": {
-    "build": "rimraf dist && rollup -c",
-    "start": "rollup -c -w"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "tooltip-component",
-  "author": "Jan-Niclas Struewer",
-  "module": "dist/tooltip-component.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/tooltip-component.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/tooltip-component.esm.js",
-      "limit": "10 KB"
-    }
-  ],
-  "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@babel/plugin-transform-runtime": "^7.15.0",
-    "@babel/preset-env": "^7.15.6",
-    "@babel/preset-react": "^7.14.5",
-    "@babel/preset-typescript": "^7.15.0",
-    "@babel/runtime": "^7.15.4",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-node-resolve": "^13.0.4",
-    "@rollup/plugin-typescript": "^8.2.5",
-    "@types/react": "^17.0.21",
-    "@types/react-dom": "^17.0.9",
+  "private": true,
+  "homepage": "http://fraunhofer-iem.github.io/tooltip-component",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "cytoscape": "^3.19.1",
+    "cytoscape-popper": "^2.0.0",
+    "deep-equal": "^1.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.56.3",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-terser": "^7.0.2",
-    "tslib": "^2.3.1",
-    "typescript": "^4.4.3"
+    "react-scripts": "4.0.3",
+    "tooltip-component": "file:.yalc/tooltip-component",
+    "typescript": "^4.1.2",
+    "web-vitals": "^1.0.1"
   },
-  "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "dependencies": {
-    "@tippyjs/react": "^4.2.5"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "files": [
-    "dist"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/cytoscape": "^3.14.17",
+    "@types/cytoscape-popper": "^2.0.0",
+    "@types/deep-equal": "^1.0.1",
+    "gh-pages": "^3.2.3"
+  }
 }

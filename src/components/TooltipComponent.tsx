@@ -22,7 +22,7 @@ export interface TooltipControl {
  * in order to allow control of Tippy tooltips within the wrapped component.
  * Also add TooltipComponent to the virtual DOM.
  */
-export function tippyfy(component: (props: TooltipControl) => React.ReactNode) {
+export function tippyfy(component: (props: any) => React.ReactNode) {
   return (props: { [key: string]: any }) => {
     const tooltipRegistry = React.useRef<(target: string) => TippyControl>();
 

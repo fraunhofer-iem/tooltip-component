@@ -19,7 +19,10 @@
     "trailingComma": "es5"
   },
   "name": "tooltip-component",
-  "author": "Jan-Niclas Struewer",
+  "author": "Felix Barczewicz (https://github.com/DieserFelix)",
+  "contributors": [
+    "Jan-Niclas Struewer (https://github.com/janniclas)"
+  ],
   "module": "dist/tooltip-component.esm.js",
   "size-limit": [
     {

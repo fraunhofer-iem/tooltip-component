@@ -33,31 +33,34 @@ export function tippyfy(component: (props: any) => React.ReactNode) {
       []
     );
 
-    const setTippy = (
-      target: string,
-      props: {
-        content?: React.ReactNode;
-        popperRef?: popper.VirtualElement;
-        dispose?: () => void;
-        tippyProps?: TippyComponentProps;
-      }
-    ) => {
-      if (tooltipRegistry.current) {
-        const controls = tooltipRegistry.current(target);
-        if (props.hasOwnProperty('content')) {
-          controls.setContent(props.content);
+    const setTippy = React.useCallback(
+      (
+        target: string,
+        props: {
+          content?: React.ReactNode;
+          popperRef?: popper.VirtualElement;
+          dispose?: () => void;
+          tippyProps?: TippyComponentProps;
         }
-        if (props.hasOwnProperty('popperRef')) {
-          controls.setReference(props.popperRef);
+      ) => {
+        if (tooltipRegistry.current) {
+          const controls = tooltipRegistry.current(target);
+          if (props.hasOwnProperty('content')) {
+            controls.setContent(props.content);
+          }
+          if (props.hasOwnProperty('popperRef')) {
+            controls.setReference(props.popperRef);
+          }
+          if (props.hasOwnProperty('dispose')) {
+            controls.setDispose(() => props.dispose);
+          }
+          if (props.hasOwnProperty('tippyProps')) {
+            controls.additionalProps(props.tippyProps ?? {});
+          }
         }
-        if (props.hasOwnProperty('dispose')) {
-          controls.setDispose(() => props.dispose);
-        }
-        if (props.hasOwnProperty('tippyProps')) {
-          controls.additionalProps(props.tippyProps ?? {});
-        }
-      }
-    };
+      },
+      []
+    );
     return (
       <>
         <TooltipComponent controls={setTooltipRegistry} />
